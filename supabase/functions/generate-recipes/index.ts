@@ -12,6 +12,85 @@ const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/
 // 5 generations per requester per hour
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+const RECIPE_RESPONSE_SCHEMA = {
+  type: 'OBJECT',
+  properties: {
+    recipes: {
+      type: 'ARRAY',
+      minItems: 3,
+      maxItems: 3,
+      items: {
+        type: 'OBJECT',
+        properties: {
+          id: { type: 'STRING' },
+          title: { type: 'STRING' },
+          description: { type: 'STRING' },
+          userIngredients: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+          },
+          extraIngredients: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+          },
+          instructions: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+          },
+          prepTime: { type: 'NUMBER' },
+          cookTime: { type: 'NUMBER' },
+          totalTime: { type: 'NUMBER' },
+          servings: { type: 'NUMBER' },
+          similarRecipes: {
+            type: 'ARRAY',
+            items: {
+              type: 'OBJECT',
+              properties: {
+                title: { type: 'STRING' },
+                url: { type: 'STRING' },
+              },
+              required: ['title', 'url'],
+              propertyOrdering: ['title', 'url'],
+            },
+          },
+          extraInfo: {
+            type: 'STRING',
+            nullable: true,
+          },
+        },
+        required: [
+          'id',
+          'title',
+          'description',
+          'userIngredients',
+          'extraIngredients',
+          'instructions',
+          'prepTime',
+          'cookTime',
+          'totalTime',
+          'servings',
+          'similarRecipes',
+        ],
+        propertyOrdering: [
+          'id',
+          'title',
+          'description',
+          'userIngredients',
+          'extraIngredients',
+          'instructions',
+          'prepTime',
+          'cookTime',
+          'totalTime',
+          'servings',
+          'similarRecipes',
+          'extraInfo',
+        ],
+      },
+    },
+  },
+  required: ['recipes'],
+  propertyOrdering: ['recipes'],
+};
 
 const ALLOWED_ORIGINS = [
   'https://chardrizard.github.io',
@@ -134,6 +213,7 @@ serve(async (req) => {
             temperature: 0.8,
             maxOutputTokens: 8000,
             responseMimeType: 'application/json',
+            responseSchema: RECIPE_RESPONSE_SCHEMA,
           },
         }),
         signal: controller.signal,

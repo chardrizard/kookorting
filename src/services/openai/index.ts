@@ -5,6 +5,7 @@ import { SYSTEM_PROMPT } from './prompts';
 import { validateSelectionState, generateUserMessage } from './validation';
 import { mockRecipes } from './mockRecipes';
 import { callRecipeModel } from './client';
+import { normalizeRecipeResponse } from './normalizeRecipeResponse';
 
 export async function generateRecipes(selectionState: SelectionState): Promise<Recipe[]> {
   try {
@@ -27,10 +28,15 @@ export async function generateRecipes(selectionState: SelectionState): Promise<R
       const result = await callRecipeModel(userMessage, SYSTEM_PROMPT);
 
       const parsed = typeof result === 'string' ? JSON.parse(result) : result;
-      const validated = RecipesResponseSchema.safeParse(parsed);
+      const normalized = normalizeRecipeResponse(parsed);
+      const validated = RecipesResponseSchema.safeParse(normalized);
 
       if (validated.success) {
         return validated.data.recipes as Recipe[];
+      }
+
+      if (import.meta.env.DEV) {
+        console.error('Invalid recipe format in API response', validated.error.flatten());
       }
 
       toast.error('Invalid recipe format in API response');
