@@ -48,9 +48,6 @@ export const useRecipeGeneration = () => {
       }
       return false;
     } catch (error) {
-      if (error.name !== 'AbortError') {
-        console.error('Error generating recipes:', error);
-      }
       return false;
     } finally {
       setIsLoading(false);

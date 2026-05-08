@@ -12,15 +12,13 @@ import ServingSelector from '@/components/ServingSelector';
 import LoadingScreen from '@/components/LoadingScreen';
 import PendingIngredientHandler from '@/components/selection/PendingIngredientHandler';
 import useRecipeStore from '@/hooks/useRecipeStore';
+import { sanitizeInput } from '@/lib/sanitize';
 import { useRecipeGeneration } from '@/hooks/useRecipeGeneration';
 import { useSelectionValidation } from '@/hooks/useSelectionValidation';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 const Selection = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useLanguage();
-  
   const [pendingIngredient, setPendingIngredient] = useState('');
   const [showUnsavedIngredientModal, setShowUnsavedIngredientModal] = useState(false);
   
@@ -61,14 +59,7 @@ const Selection = () => {
   }, [protein, cuisine, setShowProteinAlert, setShowCuisineAlert]);
   
   const handleInputChange = (value: string) => {
-    const sanitized = value
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;')
-      .slice(0, 100);
-      
-    setPendingIngredient(sanitized);
+    setPendingIngredient(sanitizeInput(value, 100));
   };
   
   const handleAddPendingIngredient = async () => {

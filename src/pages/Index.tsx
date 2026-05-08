@@ -1,7 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
 import { CookingPot } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import {
   Carousel,
   CarouselContent,
@@ -28,7 +27,6 @@ const uvpItems = [
 
 const Index = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(0);
   
   // Auto-scroll carousel

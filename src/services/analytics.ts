@@ -2,45 +2,20 @@
 // Google Analytics service
 // This service handles all analytics tracking events
 
-// Check if Google Analytics is loaded
+import { sanitizeInput } from '@/lib/sanitize';
+
 const isGaAvailable = (): boolean => {
   return typeof window !== 'undefined' && typeof (window as any).gtag === 'function';
 };
 
-// Validate analytics parameters to prevent injection
 const sanitizeAnalyticsParams = (params: Record<string, any>): Record<string, any> => {
   const sanitized: Record<string, any> = {};
-  
   for (const [key, value] of Object.entries(params)) {
-    // Skip null or undefined values
-    if (value === null || value === undefined) {
-      continue;
-    }
-    
-    // Sanitize strings to prevent XSS
-    if (typeof value === 'string') {
-      sanitized[key] = value
-        .trim()
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
-        .slice(0, 1000); // Limit string length
-    }
-    // Handle numbers directly
-    else if (typeof value === 'number') {
-      sanitized[key] = value;
-    }
-    // Handle booleans directly
-    else if (typeof value === 'boolean') {
-      sanitized[key] = value;
-    }
-    // For objects and arrays, convert to string to be safe
-    else {
-      sanitized[key] = JSON.stringify(value).slice(0, 1000);
-    }
+    if (value === null || value === undefined) continue;
+    if (typeof value === 'string') sanitized[key] = sanitizeInput(value, 1000);
+    else if (typeof value === 'number' || typeof value === 'boolean') sanitized[key] = value;
+    else sanitized[key] = JSON.stringify(value).slice(0, 1000);
   }
-  
   return sanitized;
 };
 
@@ -62,7 +37,6 @@ export const trackEvent = (eventName: string, parameters: Record<string, any> = 
       };
       
       (window as any).gtag('event', eventName, enhancedParams);
-      console.log(`Analytics: ${eventName}`, enhancedParams);
     } catch (error) {
       console.error('Error tracking event:', error);
     }

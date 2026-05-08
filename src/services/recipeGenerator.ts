@@ -48,14 +48,6 @@ export const generateRecipesWithValidation = async ({
   lastRequestTime = now;
   
   try {
-    console.log('Generating recipes with ingredients:', {
-      protein,
-      cuisine,
-      sanitizedPantryIngredients,
-      sanitizedAdditionalIngredients,
-      validatedServingInfo
-    });
-    
     const recipes = await generateRecipes({
       protein,
       cuisine,
@@ -63,11 +55,8 @@ export const generateRecipesWithValidation = async ({
       additionalIngredients: sanitizedAdditionalIngredients,
       servingInfo: validatedServingInfo
     });
-    
-    console.log('Generated recipes:', recipes);
     return recipes;
   } catch (error) {
-    console.error('Error generating recipes:', error);
     toast.error('Kon geen recepten genereren. Probeer het opnieuw.');
     return null;
   }

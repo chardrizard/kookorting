@@ -1,32 +1,17 @@
 
 import { type SelectionState } from '@/lib/types';
+import { sanitizeInput, sanitizeIngredients } from '@/lib/sanitize';
 
-export function sanitizeInput(input: string, maxLength = 100): string {
-  if (!input) return '';
-  
-  return input
-    .trim()
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .slice(0, maxLength);
-}
+export { sanitizeIngredients };
 
-export function validateUserInput(input: string): string {  
+export function validateUserInput(input: string): string {
   return sanitizeInput(input, 1000);
-}
-
-export function sanitizeIngredients(ingredients: string[]): string[] {
-  return ingredients
-    .filter(ingredient => ingredient && typeof ingredient === 'string')
-    .map(ingredient => sanitizeInput(ingredient));
 }
 
 export function validateServingInfo(adults: number, kids: number) {
   return {
     adults: Math.min(Math.max(1, adults), 10),
-    kids: Math.min(Math.max(0, kids), 10)
+    kids: Math.min(Math.max(0, kids), 10),
   };
 }
 
@@ -43,7 +28,7 @@ export function generateUserMessage(
   const sanitizedPantryIngredients = sanitizeIngredients(pantryIngredients);
   const sanitizedExtraIngredients = sanitizeIngredients(extraIngredients);
   const validServings = validateServingInfo(adults, kids);
-  
+
   return `I want to cook something with the following:
 1. Protein: ${sanitizedProtein}
 2. Cuisine: ${sanitizedCuisine} with these pantry ingredients: ${sanitizedPantryIngredients.join(', ')}
@@ -56,4 +41,3 @@ export function validateSelectionState(selectionState: SelectionState): void {
     throw new Error('Protein and cuisine selection are required');
   }
 }
-
