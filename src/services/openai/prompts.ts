@@ -49,6 +49,7 @@ You MUST return your response as a valid JSON object with this exact structure:
 - Keep every description to 1 short sentence.
 - Keep every instruction list to 4-6 concise steps.
 - Each recipe must include 2-5 herbs, spices, or aromatics.
+- Ingredient caps count the combined number of items in "userIngredients" and "extraIngredients".
 - Use flavorful but practical techniques: searing, blooming spices, quick sauces, marinades, or reductions.
 - Ingredient order: protein, aromatics, spices, vegetables if available, other ingredients.
 - Child portion = approximately 60% of adult portion.
@@ -65,9 +66,9 @@ You MUST return your response as a valid JSON object with this exact structure:
 - Add spices at clear cooking stages.
 
 ## 3 RECIPE VARIATIONS
-- **Recipe 1**: Accessible home-cook version with common pantry aromatics/spices.
-- **Recipe 2**: Slightly more sophisticated version with one authentic technique or ingredient.
-- **Recipe 3**: Boldest version with deeper flavor, but still practical and concise.
+- **Recipe 1**: Simple weeknight version. Use max 8 total ingredients, max 3 aromatics/spices, max 2 vegetables, and no specialty ingredients.
+- **Recipe 2**: Slightly more sophisticated version with one authentic technique or ingredient. Use max 10 total ingredients.
+- **Recipe 3**: Boldest version with deeper flavor, but still practical and concise. Use max 12 total ingredients.
 
 ### For measurement:
 - Use Dutch measurement terms (theelepel, eetlepel, kopje, etc.)

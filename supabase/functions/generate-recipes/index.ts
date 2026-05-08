@@ -23,18 +23,29 @@ const RECIPE_RESPONSE_SCHEMA = {
         type: 'OBJECT',
         properties: {
           id: { type: 'STRING' },
-          title: { type: 'STRING' },
-          description: { type: 'STRING' },
+          title: {
+            type: 'STRING',
+            description: 'Short Dutch recipe title.',
+          },
+          description: {
+            type: 'STRING',
+            description: 'One concise Dutch sentence describing the dish.',
+          },
           userIngredients: {
             type: 'ARRAY',
+            description: 'Ingredient lines for the selected protein and any user-provided ingredients used in this recipe.',
             items: { type: 'STRING' },
           },
           extraIngredients: {
             type: 'ARRAY',
+            description: 'Additional ingredients the user needs to add or buy, kept compact.',
             items: { type: 'STRING' },
           },
           instructions: {
             type: 'ARRAY',
+            minItems: 4,
+            maxItems: 6,
+            description: 'Concise Dutch cooking steps with clear flavor-building stages.',
             items: { type: 'STRING' },
           },
           prepTime: { type: 'NUMBER' },
@@ -43,6 +54,9 @@ const RECIPE_RESPONSE_SCHEMA = {
           servings: { type: 'NUMBER' },
           similarRecipes: {
             type: 'ARRAY',
+            minItems: 2,
+            maxItems: 2,
+            description: 'Two English Google search suggestions for similar recipes.',
             items: {
               type: 'OBJECT',
               properties: {
@@ -55,6 +69,7 @@ const RECIPE_RESPONSE_SCHEMA = {
           },
           extraInfo: {
             type: 'STRING',
+            description: 'Optional short Dutch note about used or unsuitable extra ingredients.',
             nullable: true,
           },
         },
