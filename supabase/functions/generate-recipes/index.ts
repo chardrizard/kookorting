@@ -3,10 +3,11 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const MODEL = 'gpt-4o-mini';
+const MODEL = 'gemini-2.5-flash';
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 // 5 generations per user per hour
 const RATE_LIMIT_MAX = 5;
@@ -18,12 +19,34 @@ const ALLOWED_ORIGINS = [
   'http://localhost:5173',
 ];
 
+type GeminiResponse = {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{
+        text?: string;
+      }>;
+    };
+  }>;
+};
+
 function getCorsHeaders(origin: string | null) {
   const allowed = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': allowed,
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   };
+}
+
+function getGeminiResponseText(data: GeminiResponse): string | null {
+  const parts = data?.candidates?.[0]?.content?.parts;
+  if (!Array.isArray(parts)) return null;
+
+  const text = parts
+    .map((part) => part?.text)
+    .filter((partText) => typeof partText === 'string')
+    .join('');
+
+  return text || null;
 }
 
 serve(async (req) => {
@@ -35,9 +58,9 @@ serve(async (req) => {
   }
 
   try {
-    if (!OPENAI_API_KEY) {
+    if (!GEMINI_API_KEY) {
       return new Response(
-        JSON.stringify({ error: 'OpenAI API key is not configured', status: 'error' }),
+        JSON.stringify({ error: 'Gemini API key is not configured', status: 'error' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -95,21 +118,27 @@ serve(async (req) => {
     const timeoutId = setTimeout(() => controller.abort(), 60000);
 
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const response = await fetch(GEMINI_API_URL, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'x-goog-api-key': GEMINI_API_KEY,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: MODEL,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userMessage },
+          systemInstruction: {
+            parts: [{ text: systemPrompt }],
+          },
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: userMessage }],
+            },
           ],
-          temperature: 0.8,
-          max_tokens: 8000,
-          response_format: { type: 'json_object' },
+          generationConfig: {
+            temperature: 0.8,
+            maxOutputTokens: 8000,
+            responseMimeType: 'application/json',
+          },
         }),
         signal: controller.signal,
       });
@@ -122,8 +151,19 @@ serve(async (req) => {
       }
 
       const data = await response.json();
+      const content = getGeminiResponseText(data);
 
-      return new Response(JSON.stringify(data), {
+      if (!content) {
+        throw new Error('Invalid response format from Gemini API');
+      }
+
+      return new Response(JSON.stringify({
+        choices: [
+          {
+            message: { content },
+          },
+        ],
+      }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     } catch (fetchError) {

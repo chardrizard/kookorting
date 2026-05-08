@@ -4,7 +4,7 @@ import { type Recipe, type SelectionState, RecipesResponseSchema } from '@/lib/t
 import { SYSTEM_PROMPT } from './prompts';
 import { validateSelectionState, generateUserMessage } from './validation';
 import { mockRecipes } from './mockRecipes';
-import { callOpenAI } from './client';
+import { callRecipeModel } from './client';
 
 export async function generateRecipes(selectionState: SelectionState): Promise<Recipe[]> {
   try {
@@ -24,7 +24,7 @@ export async function generateRecipes(selectionState: SelectionState): Promise<R
     );
 
     try {
-      const result = await callOpenAI(userMessage, SYSTEM_PROMPT);
+      const result = await callRecipeModel(userMessage, SYSTEM_PROMPT);
 
       const parsed = typeof result === 'string' ? JSON.parse(result) : result;
       const validated = RecipesResponseSchema.safeParse(parsed);

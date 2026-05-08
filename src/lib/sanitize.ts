@@ -1,8 +1,8 @@
 /**
  * Constrains user input to a safe length and strips characters that fall
  * outside the printable ASCII + common Latin-extended range.
- * HTML entity encoding is intentionally omitted — React escapes output,
- * and encoding before sending to OpenAI produces garbled prompt text.
+ * HTML entity encoding is intentionally omitted because React escapes output,
+ * and encoding before sending to the recipe model produces garbled prompt text.
  */
 export function sanitizeInput(input: string, maxLength = 100): string {
   if (!input || typeof input !== 'string') return '';
