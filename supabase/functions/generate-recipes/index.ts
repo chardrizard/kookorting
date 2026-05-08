@@ -9,7 +9,7 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const MODEL = 'gemini-2.5-flash';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
-// 5 generations per user per hour
+// 5 generations per requester per hour
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 
@@ -49,6 +49,20 @@ function getGeminiResponseText(data: GeminiResponse): string | null {
   return text || null;
 }
 
+function getRateLimitKey(req: Request): string {
+  const forwardedFor = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  const cfConnectingIp = req.headers.get('cf-connecting-ip')?.trim();
+  const realIp = req.headers.get('x-real-ip')?.trim();
+  const ip = forwardedFor || cfConnectingIp || realIp;
+
+  if (ip) {
+    return `ip:${ip}`;
+  }
+
+  const userAgent = req.headers.get('user-agent') || 'unknown';
+  return `ua:${userAgent.slice(0, 120)}`;
+}
+
 serve(async (req) => {
   const origin = req.headers.get('Origin');
   const corsHeaders = getCorsHeaders(origin);
@@ -65,33 +79,15 @@ serve(async (req) => {
       );
     }
 
-    // Verify caller has a valid Supabase session (anon or authenticated)
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized', status: 'error' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const jwt = authHeader.replace('Bearer ', '');
     const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const rateLimitKey = getRateLimitKey(req);
 
-    // Validate the JWT and extract user id
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(jwt);
-    if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid session', status: 'error' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Server-side rate limiting: 5 generations per user per hour
+    // Server-side rate limiting: 5 generations per requester per hour
     const now = Date.now();
     const { data: rateRecord } = await supabaseAdmin
       .from('recipe_rate_limits')
       .select('count, window_start')
-      .eq('user_id', user.id)
+      .eq('user_id', rateLimitKey)
       .maybeSingle();
 
     const windowStart = rateRecord?.window_start ? new Date(rateRecord.window_start).getTime() : 0;
@@ -107,7 +103,7 @@ serve(async (req) => {
 
     // Upsert the rate limit record
     await supabaseAdmin.from('recipe_rate_limits').upsert({
-      user_id: user.id,
+      user_id: rateLimitKey,
       count: currentCount + 1,
       window_start: inWindow ? rateRecord!.window_start : new Date().toISOString(),
     });

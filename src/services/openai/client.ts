@@ -18,42 +18,6 @@ function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : '';
 }
 
-let anonymousSignInPromise: Promise<string> | null = null;
-
-async function ensureSession(): Promise<string> {
-  const {
-    data: { session },
-    error: sessionError,
-  } = await supabase.auth.getSession();
-
-  if (sessionError) {
-    throw new Error(sessionError.message || 'Could not read Supabase session');
-  }
-
-  if (session?.access_token) {
-    return session.access_token;
-  }
-
-  anonymousSignInPromise ??= supabase.auth
-    .signInAnonymously()
-    .then(({ data, error }) => {
-      if (error) {
-        throw new Error(error.message || 'Could not start anonymous session');
-      }
-
-      if (!data.session?.access_token) {
-        throw new Error('Anonymous session did not include an access token');
-      }
-
-      return data.session.access_token;
-    })
-    .finally(() => {
-      anonymousSignInPromise = null;
-    });
-
-  return anonymousSignInPromise;
-}
-
 async function getFunctionErrorMessage(error: unknown, fallback = 'Error calling recipe generation API') {
   const context = error instanceof Error && 'context' in error ? error.context : null;
 
@@ -89,13 +53,9 @@ async function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T
 
 export async function callRecipeModel(userMessage: string, systemPrompt: string): Promise<unknown> {
   try {
-    const accessToken = await ensureSession();
     const { data, error } = await withTimeout(
       supabase.functions.invoke('generate-recipes', {
         body: { userMessage, systemPrompt },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
       }),
       TIMEOUT_MS
     );
