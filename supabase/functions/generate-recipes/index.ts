@@ -6,7 +6,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const MODEL = 'gemini-2.5-flash';
+const MODEL = 'gemini-2.5-flash-lite';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 // 5 generations per requester per hour
@@ -211,7 +211,7 @@ serve(async (req) => {
           ],
           generationConfig: {
             temperature: 0.8,
-            maxOutputTokens: 8000,
+            maxOutputTokens: 4500,
             responseMimeType: 'application/json',
             responseSchema: RECIPE_RESPONSE_SCHEMA,
           },
