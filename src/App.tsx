@@ -9,9 +9,11 @@ import NotFound from './pages/NotFound';
 import { Toaster } from 'sonner';
 import './App.css';
 
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
 function App() {
   return (
-    <Router>
+    <Router basename={routerBasename}>
       <Toaster position="top-center" richColors closeButton />
       <Routes>
         <Route path="/" element={<Index />} />
