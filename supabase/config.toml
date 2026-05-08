@@ -1,0 +1,29 @@
+
+project_id = "bddqqitjdfbtsqkitfim"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://localhost"
+
+[inbucket]
+enabled = false
+port = 54324
+
+[storage]
+enabled = true
+port = 54325
+
+[functions]
+[functions.generate-recipes]
+verify_jwt = false

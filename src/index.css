@@ -1,0 +1,211 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 11%;
+
+    --primary: 210 100% 44.5%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 0 0% 11%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 210 100% 44.5%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 210 100% 44.5%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 11%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 11%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 11%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 210 100% 44.5%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 210 100% 44.5%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 210 100% 44.5%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html, body, #root {
+    @apply w-full h-full overscroll-none;
+  }
+
+  body {
+    @apply bg-nature-background text-nature-text antialiased;
+    font-feature-settings: "ss01", "ss03", "cv01", "cv02", "cv03", "cv04";
+    touch-action: manipulation; /* Improves touch handling on mobile */
+  }
+
+  input[type="radio"] {
+    @apply h-5 w-5 accent-nature-primary cursor-pointer touch-manipulation;
+  }
+
+  input[type="checkbox"] {
+    @apply h-5 w-5 rounded accent-nature-primary cursor-pointer touch-manipulation;
+  }
+}
+
+@layer components {
+  .content-container {
+    @apply w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:w-[85%] lg:w-[70%] xl:w-[70%];
+    min-width: min(100%, 800px);
+  }
+  
+  .glass-panel {
+    @apply bg-white bg-opacity-70 backdrop-blur-md border border-white border-opacity-20 shadow-sm;
+  }
+  
+  .button-primary {
+    @apply bg-nature-primary text-white px-5 py-3 rounded-lg font-medium 
+           hover:bg-opacity-90 active:bg-opacity-80 
+           transition-all duration-300 ease-in-out
+           shadow-sm hover:shadow-md
+           text-base sm:text-lg;
+  }
+
+  .button-secondary {
+    @apply bg-nature-secondary text-nature-text px-5 py-3 rounded-lg font-medium 
+           hover:bg-opacity-90 active:bg-opacity-80 
+           transition-all duration-300 ease-in-out
+           shadow-sm hover:shadow-md;
+  }
+
+  .radio-card {
+    @apply relative flex items-start p-4 rounded-xl border border-nature-border
+           transition-all duration-300 cursor-pointer
+           touch-manipulation shadow-sm;
+  }
+
+  .radio-card.selected {
+    @apply border-nature-primary bg-nature-primary-15;
+  }
+
+  .page-transition-enter {
+    @apply opacity-0;
+  }
+
+  .page-transition-enter-active {
+    @apply opacity-100 transition-opacity duration-300;
+  }
+
+  .page-transition-exit {
+    @apply opacity-100;
+  }
+
+  .page-transition-exit-active {
+    @apply opacity-0 transition-opacity duration-300;
+  }
+
+  .ingredient-tag {
+    @apply bg-nature-primary bg-opacity-10 px-3 py-1.5 rounded-full text-sm font-medium
+           flex items-center gap-2 transition-all duration-300;
+  }
+
+  .tag-remove-button {
+    @apply h-5 w-5 rounded-full bg-nature-primary bg-opacity-20 text-nature-text
+           flex items-center justify-center hover:bg-opacity-30
+           transition-all duration-200;
+  }
+
+  .store-filter-chip {
+    @apply flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium transition-colors
+           border border-nature-border;
+  }
+
+  .store-filter-chip.active {
+    @apply bg-nature-primary text-white;
+  }
+
+  .store-filter-chip.inactive {
+    @apply bg-white text-nature-text hover:bg-nature-primary-15;
+  }
+
+  .accordion-header {
+    @apply flex items-center justify-between p-4 cursor-pointer 
+           border border-nature-border rounded-lg
+           hover:bg-nature-primary-15 transition-colors;
+  }
+
+  .accordion-header.active {
+    @apply bg-nature-primary-15 border-nature-primary rounded-b-none;
+  }
+
+  .accordion-content {
+    @apply border border-t-0 border-nature-border rounded-b-lg p-4 bg-white;
+  }
+
+  .macro-link {
+    @apply text-xs text-nature-primary hover:underline cursor-pointer flex items-center mt-2;
+  }
+
+  .discount-badge {
+    @apply flex items-center bg-nature-accent text-white font-medium rounded-full px-2 py-0.5 text-sm;
+  }
+  
+  .recipe-tab {
+    @apply px-4 py-2 font-medium text-base border-b-2 transition-colors;
+  }
+  
+  .recipe-tab.active {
+    @apply border-nature-primary text-nature-primary;
+  }
+  
+  .recipe-tab.inactive {
+    @apply border-transparent text-nature-text text-opacity-70 hover:text-nature-text;
+  }
+}

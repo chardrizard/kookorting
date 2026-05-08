@@ -1,0 +1,119 @@
+
+import { Protein } from '@/lib/types';
+import { ProteinWithDetails } from '@/lib/protein-data';
+import { calculateOriginalPrice } from '@/lib/price-utils';
+import { Vegan } from 'lucide-react';
+
+interface ProteinCardProps {
+  protein: ProteinWithDetails;
+  isSelected: boolean;
+  onSelect: (protein: Protein) => void;
+}
+
+const ProteinCard = ({ protein, isSelected, onSelect }: ProteinCardProps) => {
+  const originalPrice = calculateOriginalPrice(protein.price, protein.discount);
+  const savingsAmount = originalPrice - protein.price;
+  
+  // Use the rating directly from your protein data with a default fallback
+  const isRecommended = (protein.rating ?? 0) > 4.5;
+  
+  // Check if discount is 77% - this represents OP=OP items
+  const isOpOpDiscount = protein.discount === 77;
+  
+  // Check if discount is 76% - this represents 1+1 items
+  const isOnePlusOneDiscount = protein.discount === 76;
+  
+  // Extract the weight from packageSize
+  const weightMatch = protein.packageSize.match(/(\d+)(\w+)/);
+  const weight = weightMatch ? parseFloat(weightMatch[1]) : 0;
+  const unit = weightMatch ? weightMatch[2] : protein.unit;
+  
+  // Calculate price per kg or per 100g for display
+  const pricePerWeight = weight > 0 
+    ? unit === 'kg' 
+      ? protein.price / weight 
+      : (protein.price / weight) * 1000
+    : 0;
+  
+  return (
+    <div 
+      className={`
+        rounded-lg p-4 bg-white w-full cursor-pointer transition-all
+        text-left
+        ${isSelected 
+          ? 'border border-[#2563EB] shadow-[0px_4px_6px_rgba(0,0,0,0.08)]' 
+          : 'border border-[#F3F4F6] shadow-[0px_2px_4px_rgba(0,0,0,0.05)]'
+        }
+        hover:shadow-[0px_4px_6px_rgba(0,0,0,0.08)]
+        ${isRecommended ? 'relative' : ''}
+      `}
+      onClick={() => onSelect(protein)}
+    >
+      {/* Recommended Badge */}
+      {isRecommended && (
+        <div className="absolute -top-2 -right-2 bg-[#059669] text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md z-10">
+          Aanbevolen
+        </div>
+      )}
+      
+      {/* Header - Product Name */}
+      <div className="mb-1">
+        <h3 className="text-[18px] font-bold text-[#1F2937] leading-tight flex items-center">
+          {protein.name}
+          {protein.vegan && (
+            <Vegan className="ml-2 h-4 w-4 text-green-600" aria-label="Veganistisch product" />
+          )}
+        </h3>
+      </div>
+      
+      {/* Weight and Store */}
+      <div className="text-[14px] text-[#6B7280] mb-4">
+        {protein.packageSize} · {protein.store}
+      </div>
+      
+      {/* Pricing Section */}
+      <div className="flex justify-between items-end mt-auto">
+        <div className="flex flex-col">
+          {/* Current and Original Price */}
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[20px] font-bold text-[#1F2937]">
+              €{protein.price.toFixed(2)}
+            </span>
+            {/* Only show original price if not a special discount (OP=OP or 1+1) */}
+            {!isOpOpDiscount && !isOnePlusOneDiscount && (
+              <span className="text-[14px] text-[#9CA3AF] line-through">
+                €{originalPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
+          
+          {/* Price per weight */}
+          {pricePerWeight > 0 && (
+            <div className="text-[13px] text-[#6B7280] mt-1">
+              €{pricePerWeight.toFixed(2)}/kg
+            </div>
+          )}
+          
+          {/* Brand */}
+          <div className="text-[14px] text-[#6B7280] mt-2">
+            {protein.brand}
+          </div>
+        </div>
+        
+        {/* Discount Badge */}
+        <div className={`
+          ${isOpOpDiscount ? 'bg-[#FFEDD5] text-[#C2410C]' : 
+            isOnePlusOneDiscount ? 'bg-[#DBEAFE] text-[#1D4ED8]' : 
+            'bg-[#FEE2E2] text-[#B91C1C]'} 
+          text-[14px] font-medium px-3 py-1 rounded-full`}
+        >
+          {isOpOpDiscount ? 'OP=OP' : 
+           isOnePlusOneDiscount ? '1+1' : 
+           `${protein.discount}% korting`}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProteinCard;
