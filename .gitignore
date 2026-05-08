@@ -13,6 +13,7 @@ dist-ssr
 *.local
 bun.lockb
 .claude/
+supabase/.temp/
 
 # Editor directories and files
 .vscode/*

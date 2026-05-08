@@ -40,3 +40,16 @@ jobs:
       - uses: actions/configure-pages@v4
       - uses: actions/deploy-pages@v4
         id: deployment
+
+  deploy-functions:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_ID: bddqqitjdfbtsqkitfim
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase functions deploy generate-recipes --project-ref $PROJECT_ID
