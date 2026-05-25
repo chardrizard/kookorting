@@ -24,6 +24,7 @@ async function fetchProteins(): Promise<ProteinWithDetails[]> {
     id: item.id.toString(),
     name: item.name || '',
     price: item.price_after || 0,
+    priceBefore: item.price_before || undefined,
     discount: item.discount_percentage || 0,
     store: item.supermarket || '',
     brand: item.brand || '',

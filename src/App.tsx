@@ -6,6 +6,7 @@ import Results from './pages/Results';
 import About from './pages/About';
 import Aanbiedingen from './pages/Aanbiedingen';
 import NotFound from './pages/NotFound';
+import Atelier from './pages/Atelier';
 import { Toaster } from 'sonner';
 import './App.css';
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/results" element={<Results />} />
         <Route path="/about" element={<About />} />
         <Route path="/aanbiedingen" element={<Aanbiedingen />} />
+        <Route path="/atelier" element={<Atelier />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

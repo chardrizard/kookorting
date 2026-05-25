@@ -1,0 +1,941 @@
+.atelier-page {
+  --atelier-bg: #111111;
+  --atelier-surface: #171717;
+  --atelier-raised: #1f1f1d;
+  --atelier-border: #2a2a27;
+  --atelier-border-strong: #3a3a34;
+  --atelier-text: #f5f5f0;
+  --atelier-muted: #b8b6ad;
+  --atelier-subtle: #7f7c73;
+  --atelier-accent: #7da56f;
+  --atelier-accent-strong: #9bbe8b;
+  --atelier-deal: #d96b4a;
+  --atelier-warn: #d6a84f;
+  --atelier-danger: #d85c5c;
+  --category-fish: #7fa7a1;
+  --category-chicken: #c4a66a;
+  --category-beef: #b56d5d;
+  --category-pork: #c28b82;
+  --category-vegetarian: #7da56f;
+  --category-other: #8b877d;
+
+  min-height: 100vh;
+  background: var(--atelier-bg);
+  color: var(--atelier-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+.atelier-page *,
+.atelier-page *::before,
+.atelier-page *::after {
+  box-sizing: border-box;
+}
+
+.atelier-page button,
+.atelier-page input,
+.atelier-page select {
+  font: inherit;
+}
+
+.atelier-page button {
+  cursor: pointer;
+}
+
+.atelier-page button:disabled {
+  cursor: not-allowed;
+}
+
+.atelier-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 64px;
+  padding: 0 32px;
+  background: rgba(17, 17, 17, 0.9);
+  border-bottom: 1px solid var(--atelier-border);
+  backdrop-filter: blur(16px);
+}
+
+.atelier-wordmark {
+  color: var(--atelier-text);
+  font-size: 21px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.atelier-wordmark span {
+  color: var(--atelier-accent-strong);
+}
+
+.atelier-header nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.atelier-header nav a {
+  color: var(--atelier-muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.atelier-header nav a:hover {
+  color: var(--atelier-text);
+}
+
+.atelier-shell {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 56px 0 80px;
+}
+
+.atelier-intro {
+  display: grid;
+  gap: 12px;
+  max-width: 760px;
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.atelier-kicker {
+  margin: 0;
+  color: var(--atelier-accent-strong);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.atelier-intro h1 {
+  margin: 0;
+  color: var(--atelier-text);
+  font-size: clamp(40px, 6vw, 76px);
+  font-weight: 760;
+  line-height: 0.96;
+  letter-spacing: 0;
+}
+
+.atelier-intro p:not(.atelier-kicker) {
+  max-width: 620px;
+  margin: 0;
+  color: var(--atelier-muted);
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.atelier-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+.atelier-column {
+  display: grid;
+  gap: 20px;
+}
+
+.atelier-panel,
+.atelier-brief-card,
+.atelier-results {
+  background: color-mix(in srgb, var(--atelier-surface) 94%, transparent);
+  border: 1px solid var(--atelier-border);
+  border-radius: 12px;
+}
+
+.atelier-panel {
+  padding: 22px;
+}
+
+.atelier-section-title {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.atelier-section-title > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border: 1px solid var(--atelier-border-strong);
+  border-radius: 999px;
+  color: var(--atelier-accent-strong);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.atelier-section-title h2,
+.atelier-brief-header h2,
+.atelier-results-heading h2 {
+  margin: 0;
+  color: var(--atelier-text);
+  font-weight: 720;
+  letter-spacing: 0;
+}
+
+.atelier-section-title h2 {
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.atelier-section-title p,
+.atelier-brief-header p,
+.atelier-results-heading p {
+  margin: 4px 0 0;
+  color: var(--atelier-subtle);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.atelier-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.atelier-store-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.atelier-store-chips button,
+.atelier-subtle-button,
+.atelier-sort,
+.atelier-tags button,
+.atelier-reset {
+  border: 1px solid var(--atelier-border);
+  color: var(--atelier-muted);
+  background: transparent;
+}
+
+.atelier-store-chips button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.atelier-store-chips button.is-active {
+  border-color: rgba(125, 165, 111, 0.7);
+  background: rgba(125, 165, 111, 0.12);
+  color: var(--atelier-text);
+}
+
+.atelier-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 10px 0 12px;
+  border-radius: 8px;
+}
+
+.atelier-sort span {
+  color: var(--atelier-subtle);
+  font-size: 12px;
+}
+
+.atelier-sort select {
+  min-width: 130px;
+  border: 0;
+  outline: 0;
+  color: var(--atelier-text);
+  background: transparent;
+}
+
+.atelier-sort option {
+  color: #111;
+}
+
+.atelier-deal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.atelier-deal-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 14px;
+  min-height: 150px;
+  padding: 14px;
+  border: 1px solid var(--atelier-border);
+  border-radius: 10px;
+  background: #141412;
+  color: inherit;
+  text-align: left;
+  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.atelier-deal-card:hover,
+.atelier-deal-card:focus-visible {
+  border-color: var(--atelier-border-strong);
+  background: #191916;
+}
+
+.atelier-deal-card.is-selected {
+  border-color: rgba(125, 165, 111, 0.8);
+  background: var(--atelier-raised);
+}
+
+.atelier-deal-card.is-selected::before {
+  content: "";
+  position: absolute;
+  inset: 12px auto 12px 0;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--atelier-accent);
+}
+
+.atelier-category {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.atelier-category--fish {
+  color: var(--category-fish);
+  background: rgba(127, 167, 161, 0.13);
+}
+
+.atelier-category--chicken {
+  color: var(--category-chicken);
+  background: rgba(196, 166, 106, 0.13);
+}
+
+.atelier-category--beef {
+  color: var(--category-beef);
+  background: rgba(181, 109, 93, 0.13);
+}
+
+.atelier-category--pork {
+  color: var(--category-pork);
+  background: rgba(194, 139, 130, 0.13);
+}
+
+.atelier-category--vegetarian {
+  color: var(--category-vegetarian);
+  background: rgba(125, 165, 111, 0.13);
+}
+
+.atelier-category--other {
+  color: var(--category-other);
+  background: rgba(139, 135, 125, 0.13);
+}
+
+.atelier-deal-content,
+.atelier-deal-heading,
+.atelier-deal-bottom {
+  display: flex;
+}
+
+.atelier-deal-content {
+  min-width: 0;
+  flex-direction: column;
+}
+
+.atelier-deal-heading {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.atelier-deal-name {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--atelier-text);
+  font-size: 16px;
+  font-weight: 720;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.atelier-selected-mark {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  color: #111;
+  background: var(--atelier-accent-strong);
+}
+
+.atelier-deal-meta {
+  margin-top: 6px;
+  color: var(--atelier-subtle);
+  font-size: 13px;
+}
+
+.atelier-deal-bottom {
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.atelier-deal-bottom strong {
+  display: block;
+  color: var(--atelier-text);
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.atelier-deal-bottom small {
+  display: block;
+  margin-top: 4px;
+  color: var(--atelier-subtle);
+  font-size: 12px;
+}
+
+.atelier-discount {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #160b07;
+  background: var(--atelier-deal);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.atelier-subtle-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 38px;
+  margin: 16px auto 0;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+.atelier-subtle-button:hover,
+.atelier-reset:hover,
+.atelier-tags button:hover {
+  color: var(--atelier-text);
+  border-color: var(--atelier-border-strong);
+}
+
+.atelier-cuisine-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.atelier-cuisine-tile {
+  display: grid;
+  gap: 10px;
+  min-height: 132px;
+  padding: 14px;
+  border: 1px solid var(--atelier-border);
+  border-radius: 10px;
+  background: #141412;
+  color: inherit;
+  text-align: left;
+}
+
+.atelier-cuisine-tile:hover,
+.atelier-cuisine-tile:focus-visible,
+.atelier-cuisine-tile.is-selected {
+  border-color: rgba(125, 165, 111, 0.72);
+  background: var(--atelier-raised);
+}
+
+.atelier-cuisine-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--atelier-border-strong);
+  border-radius: 8px;
+  color: var(--atelier-accent-strong);
+  background: rgba(125, 165, 111, 0.09);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.atelier-cuisine-tile strong {
+  display: block;
+  color: var(--atelier-text);
+  font-size: 15px;
+}
+
+.atelier-cuisine-tile small {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 5px;
+  color: var(--atelier-subtle);
+  font-size: 12px;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.atelier-brief {
+  position: sticky;
+  top: 88px;
+}
+
+.atelier-brief-card {
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+}
+
+.atelier-brief-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  text-align: left;
+}
+
+.atelier-orb {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  color: var(--atelier-accent-strong);
+  background: rgba(125, 165, 111, 0.12);
+}
+
+.atelier-brief-header h2 {
+  font-size: 22px;
+}
+
+.atelier-brief-header p {
+  color: var(--atelier-accent-strong);
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.atelier-brief-list {
+  display: grid;
+  gap: 10px;
+}
+
+.atelier-brief-list > div,
+.atelier-serving > div {
+  padding: 13px;
+  border: 1px solid var(--atelier-border);
+  border-radius: 8px;
+  background: #141412;
+  text-align: left;
+}
+
+.atelier-brief-list span,
+.atelier-serving span,
+.atelier-extra-form label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--atelier-subtle);
+  font-size: 12px;
+}
+
+.atelier-brief-list strong {
+  display: block;
+  color: var(--atelier-text);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.atelier-brief-list small {
+  display: block;
+  margin-top: 4px;
+  color: var(--atelier-subtle);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.atelier-serving {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.atelier-serving > div > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.atelier-serving button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--atelier-border-strong);
+  border-radius: 999px;
+  color: var(--atelier-accent-strong);
+  background: transparent;
+}
+
+.atelier-serving button:disabled {
+  opacity: 0.35;
+}
+
+.atelier-serving strong {
+  color: var(--atelier-text);
+  font-size: 20px;
+}
+
+.atelier-extra-form {
+  display: grid;
+  gap: 8px;
+  text-align: left;
+}
+
+.atelier-extra-form > div {
+  display: flex;
+}
+
+.atelier-extra-form input {
+  min-width: 0;
+  flex: 1;
+  height: 44px;
+  border: 1px solid var(--atelier-border);
+  border-right: 0;
+  border-radius: 8px 0 0 8px;
+  outline: 0;
+  padding: 0 12px;
+  color: var(--atelier-text);
+  background: #11110f;
+}
+
+.atelier-extra-form input::placeholder {
+  color: var(--atelier-subtle);
+}
+
+.atelier-extra-form button {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 44px;
+  border: 1px solid var(--atelier-border);
+  border-radius: 0 8px 8px 0;
+  color: #111;
+  background: var(--atelier-accent-strong);
+}
+
+.atelier-extra-form button:disabled {
+  opacity: 0.45;
+}
+
+.atelier-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.atelier-tags button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.atelier-inline-error {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(216, 92, 92, 0.45);
+  border-radius: 8px;
+  color: #f4b6b6;
+  background: rgba(216, 92, 92, 0.1);
+  font-size: 14px;
+  text-align: left;
+}
+
+.atelier-generate,
+.atelier-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  border-radius: 8px;
+}
+
+.atelier-generate {
+  border: 0;
+  color: #111;
+  background: var(--atelier-accent-strong);
+  font-weight: 750;
+}
+
+.atelier-generate:disabled {
+  opacity: 0.45;
+}
+
+.atelier-reset {
+  background: transparent;
+}
+
+.atelier-spin {
+  animation: atelier-spin 900ms linear infinite;
+}
+
+.atelier-empty {
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+  border: 1px dashed var(--atelier-border);
+  border-radius: 10px;
+  color: var(--atelier-subtle);
+}
+
+.atelier-empty.is-error {
+  color: #f4b6b6;
+}
+
+.atelier-results {
+  margin-top: 24px;
+  padding: 24px;
+  text-align: left;
+}
+
+.atelier-results-heading {
+  margin-bottom: 18px;
+}
+
+.atelier-results-heading p {
+  color: var(--atelier-warn);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.atelier-results-heading h2 {
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.05;
+}
+
+.atelier-recipe-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.atelier-recipe {
+  overflow: hidden;
+  border: 1px solid var(--atelier-border);
+  border-radius: 10px;
+  background: #141412;
+}
+
+.atelier-recipe.is-open {
+  border-color: var(--atelier-border-strong);
+}
+
+.atelier-recipe-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 18px;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+}
+
+.atelier-recipe-header small {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--atelier-subtle);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.atelier-recipe-header strong {
+  display: block;
+  color: var(--atelier-text);
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.atelier-recipe.is-open .atelier-recipe-header svg {
+  transform: rotate(180deg);
+}
+
+.atelier-recipe-body {
+  padding: 0 18px 18px;
+}
+
+.atelier-recipe-body p {
+  margin: 0 0 14px;
+  color: var(--atelier-muted);
+  line-height: 1.55;
+}
+
+.atelier-recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.atelier-recipe-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--atelier-border);
+  border-radius: 999px;
+  color: var(--atelier-muted);
+  font-size: 13px;
+}
+
+.atelier-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  margin-bottom: 14px;
+  border: 1px solid var(--atelier-border);
+  border-radius: 8px;
+}
+
+.atelier-tabs button {
+  flex: 1;
+  min-height: 34px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--atelier-muted);
+  background: transparent;
+}
+
+.atelier-tabs button.is-active {
+  color: var(--atelier-text);
+  background: var(--atelier-raised);
+}
+
+.atelier-ingredient-list,
+.atelier-instruction-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  color: var(--atelier-muted);
+  line-height: 1.45;
+}
+
+.atelier-ingredient-list {
+  padding: 0;
+  list-style: none;
+}
+
+.atelier-ingredient-list li {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+}
+
+.atelier-ingredient-list li span {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  margin-top: 2px;
+  border: 1px solid var(--atelier-border-strong);
+  border-radius: 4px;
+}
+
+.atelier-instruction-list {
+  padding-left: 20px;
+}
+
+@keyframes atelier-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1024px) {
+  .atelier-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .atelier-brief {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .atelier-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 18px;
+  }
+
+  .atelier-header nav {
+    flex-wrap: wrap;
+  }
+
+  .atelier-shell {
+    width: min(100% - 32px, 1200px);
+    padding-top: 34px;
+  }
+
+  .atelier-intro {
+    margin-bottom: 28px;
+  }
+
+  .atelier-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .atelier-store-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .atelier-store-chips button {
+    flex: 0 0 auto;
+  }
+
+  .atelier-deal-grid,
+  .atelier-cuisine-grid,
+  .atelier-serving {
+    grid-template-columns: 1fr;
+  }
+
+  .atelier-panel,
+  .atelier-brief-card,
+  .atelier-results {
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atelier-deal-card,
+  .atelier-spin {
+    animation: none;
+    transition: none;
+  }
+}

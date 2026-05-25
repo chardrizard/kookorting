@@ -7,6 +7,7 @@ export interface ProteinWithDetails extends Protein {
   packageSize: string;
   unit: string;
   discount: number;
+  priceBefore?: number;
   rating?: number;
   vegan?: boolean;
   pricePerWeight?: number;

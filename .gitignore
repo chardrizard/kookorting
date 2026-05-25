@@ -15,6 +15,19 @@ bun.lockb
 .claude/
 supabase/.temp/
 
+# Local-only docs (not shipped)
+DOCUMENTATION.md
+design.md
+
+# Weekly transcription screenshots — bulky, kept locally as historical reference
+groceries_data/groceries_source/
+
+# Design exploration scratch files
+atelier-preview.html
+results-generated.png
+selection-initial.png
+selection-selected.png
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

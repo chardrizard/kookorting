@@ -2,7 +2,15 @@
 import { Protein } from '@/lib/types';
 import { ProteinWithDetails } from '@/lib/protein-data';
 import { calculateOriginalPrice } from '@/lib/price-utils';
+import { PROMO_CODES, getPromoLabel, isPromoCode } from '@/lib/promo-codes';
 import { Vegan } from 'lucide-react';
+
+const PROMO_BADGE_STYLES: Record<number, string> = {
+  [PROMO_CODES.OP_OP]: 'bg-[#FFEDD5] text-[#C2410C]',
+  [PROMO_CODES.ONE_PLUS_ONE]: 'bg-[#DBEAFE] text-[#1D4ED8]',
+  [PROMO_CODES.TWO_PLUS_ONE]: 'bg-[#DCFCE7] text-[#15803D]',
+  [PROMO_CODES.SECOND_HALF]: 'bg-[#EDE9FE] text-[#6D28D9]',
+};
 
 interface ProteinCardProps {
   protein: ProteinWithDetails;
@@ -11,17 +19,24 @@ interface ProteinCardProps {
 }
 
 const ProteinCard = ({ protein, isSelected, onSelect }: ProteinCardProps) => {
-  const originalPrice = calculateOriginalPrice(protein.price, protein.discount);
-  const savingsAmount = originalPrice - protein.price;
-  
-  // Use the rating directly from your protein data with a default fallback
   const isRecommended = (protein.rating ?? 0) > 4.5;
-  
-  // Check if discount is 77% - this represents OP=OP items
-  const isOpOpDiscount = protein.discount === 77;
-  
-  // Check if discount is 76% - this represents 1+1 items
-  const isOnePlusOneDiscount = protein.discount === 76;
+
+  const promoLabel = getPromoLabel(protein.discount);
+  const isPromo = isPromoCode(protein.discount);
+
+  // Prefer the stored price_before when present and lower-bounded sensibly;
+  // fall back to back-computing from discount only for non-promo legacy rows.
+  const originalPrice = protein.priceBefore && protein.priceBefore > protein.price
+    ? protein.priceBefore
+    : calculateOriginalPrice(protein.price, protein.discount);
+
+  // Derive the real % from prices when we have both — robust against stale or
+  // wrong stored discount_percentage values.
+  const computedDiscount = protein.priceBefore && protein.priceBefore > protein.price
+    ? Math.round(((protein.priceBefore - protein.price) / protein.priceBefore) * 100)
+    : protein.discount;
+
+  const showOriginalPrice = !isPromo && originalPrice > protein.price;
   
   // Extract the weight from packageSize
   const weightMatch = protein.packageSize.match(/(\d+)(\w+)/);
@@ -79,8 +94,7 @@ const ProteinCard = ({ protein, isSelected, onSelect }: ProteinCardProps) => {
             <span className="text-[20px] font-bold text-[#1F2937]">
               €{protein.price.toFixed(2)}
             </span>
-            {/* Only show original price if not a special discount (OP=OP or 1+1) */}
-            {!isOpOpDiscount && !isOnePlusOneDiscount && (
+            {showOriginalPrice && (
               <span className="text-[14px] text-[#9CA3AF] line-through">
                 €{originalPrice.toFixed(2)}
               </span>
@@ -102,14 +116,10 @@ const ProteinCard = ({ protein, isSelected, onSelect }: ProteinCardProps) => {
         
         {/* Discount Badge */}
         <div className={`
-          ${isOpOpDiscount ? 'bg-[#FFEDD5] text-[#C2410C]' : 
-            isOnePlusOneDiscount ? 'bg-[#DBEAFE] text-[#1D4ED8]' : 
-            'bg-[#FEE2E2] text-[#B91C1C]'} 
+          ${PROMO_BADGE_STYLES[protein.discount] ?? 'bg-[#FEE2E2] text-[#B91C1C]'}
           text-[14px] font-medium px-3 py-1 rounded-full`}
         >
-          {isOpOpDiscount ? 'OP=OP' : 
-           isOnePlusOneDiscount ? '1+1' : 
-           `${protein.discount}% korting`}
+          {promoLabel ?? `${computedDiscount}% korting`}
         </div>
       </div>
     </div>

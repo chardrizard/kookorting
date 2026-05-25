@@ -14,8 +14,12 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === 'development' &&
+    process.env.VITE_COMPONENT_TAGGER !== 'false' &&
     componentTagger(),
   ].filter(Boolean),
+  optimizeDeps: {
+    noDiscovery: process.env.VITE_SKIP_DEP_SCAN === 'true',
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
