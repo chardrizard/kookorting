@@ -43,7 +43,21 @@ groceries_data/                Weekly CSV imports live here (e.g. W4MEI26.csv)
 
 ## Weekly transcription workflow
 
-The recurring task: take screenshots of supermarket promo pages, transcribe into a CSV, import to Supabase. **About once a week, one supermarket per batch.**
+The recurring task: take screenshots of supermarket promo pages, transcribe into a CSV, import to Supabase. **Saturday or Sunday, when supermarkets refresh weekly promos.** Multiple supermarkets per batch is fine.
+
+### Start of session
+
+1. **Read [groceries_data/HISTORY.md](groceries_data/HISTORY.md)** — what's the most recent batch? What's the next expected week code?
+2. **Check `groceries_data/groceries_source/`** (the live folder, not `archive/`). Fresh screenshots should be there. If empty, ask Richard.
+3. Note the new week code (`W1JUN26`, etc.).
+
+### End of session
+
+After Supabase import succeeds:
+
+1. **Append a row to [groceries_data/HISTORY.md](groceries_data/HISTORY.md)** with status ✅, row count, supermarket breakdown.
+2. **Archive the screenshots:** `mv groceries_data/groceries_source/*.png groceries_data/groceries_source/archive/<week>/`. This empties the live folder, so next session knows to wait for fresh drops.
+3. **Verify production** — refresh the live site, spot-check a few of the new entries' prices and discount badges.
 
 ### 1. Drop screenshots in `groceries_data/groceries_source/`
 Rename to start with the supermarket name (e.g. `Albert Heijn 2026-05-25 at 18.54.53.png`). Mixed supermarkets in one batch is fine — read the branding per shot.
