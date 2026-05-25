@@ -30,7 +30,7 @@ import { SortOption } from '@/components/protein/SortSelect';
 import './Atelier.css';
 
 const SORT_OPTIONS: SortOption[] = [
-  { id: 'recommended', label: 'Aanbevolen', value: 'rating', direction: 'desc' },
+  { id: 'recommended', label: 'Aanbevolen', value: 'recommendedScore', direction: 'desc' },
   { id: 'lowest-price', label: 'Laagste prijs', value: 'price', direction: 'asc' },
   { id: 'price-per-weight', label: 'Beste waarde', value: 'pricePerWeight', direction: 'asc' },
   { id: 'vegan', label: 'Vegan eerst', value: 'vegan', direction: 'desc' },

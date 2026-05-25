@@ -22,7 +22,7 @@ interface SortSelectProps {
 }
 
 const sortOptions: SortOption[] = [
-  { id: 'recommended', label: 'Aanbevolen', value: 'rating', direction: 'desc' },
+  { id: 'recommended', label: 'Aanbevolen', value: 'recommendedScore', direction: 'desc' },
   { id: 'lowest-price', label: 'Laagste prijs', value: 'price', direction: 'asc' },
   { id: 'price-per-weight', label: 'Prijs per kg/100g', value: 'pricePerWeight', direction: 'asc' },
   { id: 'vegan', label: 'Veganistisch', value: 'vegan', direction: 'desc' },

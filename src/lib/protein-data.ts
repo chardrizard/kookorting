@@ -9,6 +9,7 @@ export interface ProteinWithDetails extends Protein {
   discount: number;
   priceBefore?: number;
   rating?: number;
+  recommendedScore?: number;
   vegan?: boolean;
   pricePerWeight?: number;
   macronutrients: {

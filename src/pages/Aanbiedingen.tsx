@@ -8,42 +8,42 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 const supermarkets = [
   {
     name: 'Albert Heijn',
-    logo: '/supermarkets/Albert Heijn.png',
+    logo: '/supermarkets/albert-heijn.svg',
     folderUrl: 'https://www.ah.nl/bonus',
     description: 'Dat is het van Albert Heijn! Wekelijkse Bonusaanbiedingen met korting tot 50%. Nieuwe acties elke maandag voor al uw dagelijkse boodschappen.',
     offerDays: 'Maandag t/m zondag',
   },
   {
     name: 'Jumbo',
-    logo: '/supermarkets/Jumbo.png',
+    logo: '/supermarkets/jumbo.svg',
     folderUrl: 'https://www.jumbo.com/aanbiedingen/nu',
     description: 'Elke dag de laagste prijs garantie! Scherpe weekaanbiedingen en speciale kortingen op verse producten. Nieuwe folder elke woensdag.',
     offerDays: 'Woensdag t/m dinsdag',
   },
   {
     name: 'Lidl',
-    logo: '/supermarkets/Lidl.png',
+    logo: '/supermarkets/lidl.svg',
     folderUrl: 'https://www.lidl.nl/store',
     description: 'Verrassend veel kwaliteit voor weinig geld. Wekelijkse aanbiedingen op vers, houdbaar en unieke non-food producten. Nieuwe acties elke maandag.',
     offerDays: 'Maandag t/m zondag',
   },
   {
     name: 'Aldi',
-    logo: '/supermarkets/Aldi.png',
+    logo: '/supermarkets/aldi.svg',
     folderUrl: 'https://www.aldi.nl/aanbiedingen.html',
     description: 'Hoge kwaliteit, lage prijs. Voordelige weekaanbiedingen en wisselende non-food acties. Ontdek onze verrassende nieuwe folder elke zondag.',
     offerDays: 'Maandag t/m zondag',
   },
   {
     name: 'Dirk',
-    logo: '/supermarkets/Dirk.png',
+    logo: '/supermarkets/dirk.svg',
     folderUrl: 'https://www.dirk.nl/aanbiedingen',
     description: 'Lage prijzen, prima kwaliteit! Geniet van scherpe weekacties en speciale 1+1 gratis aanbiedingen. Nieuwe aanbiedingen elke week.',
     offerDays: 'Zondag t/m zaterdag',
   },
   {
     name: 'Amazing Oriental',
-    logo: '/supermarkets/Amazing Oriental.png',
+    logo: '/supermarkets/amazing-oriental.png',
     folderUrl: 'https://www.orientalwebshop.nl/nl/amazing-deals',
     description: 'Dé Aziatische supermarkt van Nederland. Speciale aanbiedingen op authentieke Aziatische producten en verse specialiteiten. Wisselende seizoenspromoties.',
     offerDays: 'Wisselend per winkel',
@@ -78,7 +78,10 @@ const Aanbiedingen = () => {
                     <img 
                       src={supermarket.logo} 
                       alt={`${supermarket.name} logo`} 
-                      className="h-10 w-auto object-contain"
+                      className="h-10 w-14 object-contain"
+                      onError={(event) => {
+                        event.currentTarget.style.display = 'none';
+                      }}
                     />
                     <CardTitle className="text-xl font-semibold">{supermarket.name}</CardTitle>
                   </div>

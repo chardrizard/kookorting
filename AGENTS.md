@@ -84,22 +84,36 @@ name,brand,supermarket,weight,weight_unit,price_before,price_after,discount_perc
 
 ### 3. Compute `rating` and `points`
 
-The points formula (matches the legacy xlsx formula, with effective-discount remapping for promo codes):
+The points formula favors protein value first, then promo strength, protein density, and calorie efficiency. Promo codes are remapped to effective discounts before scoring:
 
 ```python
 EFFECTIVE = {101: 50, 102: 50, 103: 33, 104: 25}  # see promo-codes.ts
 
+def clamp_score(value):
+    return max(0, min(100, value))
+
 raw = float(row['discount_percentage'])
 disc = EFFECTIVE.get(int(raw), raw)
+weight_g = float(row['weight']) * (1000 if row['weight_unit'] == 'kg' else 1)
+protein = float(row['protein_per_100g'])
+calories = float(row['calories_per_100g'])
+price = float(row['price_after'])
+effective_price = price * (1 - disc / 100) if int(raw) in EFFECTIVE else price
+
+total_protein = weight_g * protein / 100
+protein_per_euro = total_protein / effective_price if effective_price > 0 else 0
+protein_per_100_kcal = protein / (calories / 100) if calories > 0 else 0
+
 points = (
-    0.35 * min(100, (protein/25) * 100)
-    + 0.5 * min(100, (disc/30) * 100)
-    + 0.15 * max(0, (300 - calories) / 2.5)
+    0.40 * clamp_score((protein_per_euro / 35) * 100)
+    + 0.25 * clamp_score((disc / 50) * 100)
+    + 0.20 * clamp_score((protein / 25) * 100)
+    + 0.15 * clamp_score((protein_per_100_kcal / 15) * 100)
 )
 rating = round(points / 20, 1)
 ```
 
-Weights: 50% discount, 35% protein, 15% inverse calories. Capped at ~100.
+Weights: 40% protein per euro, 25% discount/promo strength, 20% protein per 100g, 15% protein per calorie. Capped at 100.
 
 ### 4. Import to Supabase
 Table Editor → `protein-list` → Insert → Import data from CSV. Don't include `id` column — it auto-generates (sequence set up via the migration in §Database below).

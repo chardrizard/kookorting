@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ProteinWithDetails } from '@/lib/protein-data';
 import { SortOption } from '@/components/protein/SortSelect';
 import { supabase } from '@/integrations/supabase/client';
+import { calculateRecommendedScore } from '@/lib/recommended-score';
 
 const calculatePricePerWeight = (price: number, weight: number, unit: string): number => {
   if (weight <= 0) return 0;
@@ -20,31 +21,45 @@ async function fetchProteins(): Promise<ProteinWithDetails[]> {
 
   if (error) throw error;
 
-  return data.map((item) => ({
-    id: item.id.toString(),
-    name: item.name || '',
-    price: item.price_after || 0,
-    priceBefore: item.price_before || undefined,
-    discount: item.discount_percentage || 0,
-    store: item.supermarket || '',
-    brand: item.brand || '',
-    packageSize: `${item.weight || 0}${item.weight_unit || 'g'}`,
-    unit: item.weight_unit || 'g',
-    rating: item.rating || 0,
-    vegan: item.vegan || false,
-    macronutrients: {
-      kcal: item.calories_per_100g || 0,
-      protein: item.protein_per_100g || 0,
-      fat: item.fat_per_100g || 0,
-      carbs: item.carbs_per_100g || 0,
-      fiber: parseFloat(item.fiber_per_100g || '0'),
-    },
-    pricePerWeight: calculatePricePerWeight(
-      item.price_after || 0,
-      item.weight || 0,
-      item.weight_unit || 'g'
-    ),
-  }));
+  return data.map((item) => {
+    const priceAfter = item.price_after || 0;
+    const weight = item.weight || 0;
+    const weightUnit = item.weight_unit || 'g';
+    const discount = item.discount_percentage || 0;
+    const proteinPer100g = item.protein_per_100g || 0;
+    const caloriesPer100g = item.calories_per_100g || 0;
+    const recommended = calculateRecommendedScore({
+      priceAfter,
+      weight,
+      weightUnit,
+      discount,
+      proteinPer100g,
+      caloriesPer100g,
+    });
+
+    return {
+      id: item.id.toString(),
+      name: item.name || '',
+      price: priceAfter,
+      priceBefore: item.price_before || undefined,
+      discount,
+      store: item.supermarket || '',
+      brand: item.brand || '',
+      packageSize: `${weight}${weightUnit}`,
+      unit: weightUnit,
+      rating: recommended.rating,
+      recommendedScore: recommended.points,
+      vegan: item.vegan || false,
+      macronutrients: {
+        kcal: caloriesPer100g,
+        protein: proteinPer100g,
+        fat: item.fat_per_100g || 0,
+        carbs: item.carbs_per_100g || 0,
+        fiber: parseFloat(item.fiber_per_100g || '0'),
+      },
+      pricePerWeight: calculatePricePerWeight(priceAfter, weight, weightUnit),
+    };
+  });
 }
 
 function sortProteins(proteins: ProteinWithDetails[], sortOption: SortOption): ProteinWithDetails[] {
@@ -52,7 +67,7 @@ function sortProteins(proteins: ProteinWithDetails[], sortOption: SortOption): P
     if (sortOption.value === 'vegan') {
       if (a.vegan && !b.vegan) return -1;
       if (!a.vegan && b.vegan) return 1;
-      return (b.rating || 0) - (a.rating || 0);
+      return (b.recommendedScore || 0) - (a.recommendedScore || 0);
     }
     const aValue = a[sortOption.value as keyof ProteinWithDetails] as number;
     const bValue = b[sortOption.value as keyof ProteinWithDetails] as number;
@@ -65,7 +80,7 @@ export const useProteinData = () => {
   const [activeSortOption, setActiveSortOption] = useState<SortOption>({
     id: 'recommended',
     label: 'Aanbevolen',
-    value: 'rating',
+    value: 'recommendedScore',
     direction: 'desc',
   });
 
