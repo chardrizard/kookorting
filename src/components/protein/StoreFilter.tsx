@@ -1,21 +1,19 @@
 
 import { useState } from 'react';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { SUPERMARKETS } from '@/lib/protein-data';
+import { Supermarket } from '@/lib/protein-data';
 import { trackSupermarketSelection, trackViewMoreSupermarkets } from '@/services/analytics';
 
 interface StoreFilterProps {
+  availableStores: Supermarket[];
   selectedStores: string[];
   toggleStore: (store: string) => void;
 }
 
-const StoreFilter = ({ selectedStores, toggleStore }: StoreFilterProps) => {
+const StoreFilter = ({ availableStores, selectedStores, toggleStore }: StoreFilterProps) => {
   const [showAllStores, setShowAllStores] = useState(false);
 
-  const filteredSupermarkets = SUPERMARKETS.filter(
-    (store) => store.name !== 'Coop' && store.name !== 'Plus'
-  );
-  const visibleStores = showAllStores ? filteredSupermarkets : filteredSupermarkets.slice(0, 5);
+  const visibleStores = showAllStores ? availableStores : availableStores.slice(0, 5);
 
   const handleStoreToggle = (storeName: string) => {
     toggleStore(storeName);
@@ -51,7 +49,7 @@ const StoreFilter = ({ selectedStores, toggleStore }: StoreFilterProps) => {
         ))}
       </div>
 
-      {filteredSupermarkets.length > 5 && (
+      {availableStores.length > 5 && (
         <button
           onClick={handleShowMoreStores}
           className="flex items-center text-sm text-nature-primary hover:underline mt-2"

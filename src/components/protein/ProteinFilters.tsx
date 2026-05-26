@@ -2,8 +2,10 @@
 import React from 'react';
 import StoreFilter from './StoreFilter';
 import SortSelect, { SortOption } from './SortSelect';
+import { Supermarket } from '@/lib/protein-data';
 
 interface ProteinFiltersProps {
+  availableStores: Supermarket[];
   selectedStores: string[];
   toggleStore: (store: string) => void;
   activeSortOption: SortOption;
@@ -11,6 +13,7 @@ interface ProteinFiltersProps {
 }
 
 const ProteinFilters: React.FC<ProteinFiltersProps> = ({
+  availableStores,
   selectedStores,
   toggleStore,
   activeSortOption,
@@ -19,9 +22,10 @@ const ProteinFilters: React.FC<ProteinFiltersProps> = ({
   return (
     <div className="flex flex-wrap justify-between items-center gap-4">
       <div className="w-full sm:w-auto">
-        <StoreFilter 
-          selectedStores={selectedStores} 
-          toggleStore={toggleStore} 
+        <StoreFilter
+          availableStores={availableStores}
+          selectedStores={selectedStores}
+          toggleStore={toggleStore}
         />
       </div>
       

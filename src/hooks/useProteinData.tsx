@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ProteinWithDetails } from '@/lib/protein-data';
+import { ProteinWithDetails, SUPERMARKETS } from '@/lib/protein-data';
 import { SortOption } from '@/components/protein/SortSelect';
 import { supabase } from '@/integrations/supabase/client';
 import { calculateRecommendedScore } from '@/lib/recommended-score';
@@ -91,6 +91,10 @@ export const useProteinData = () => {
 
   const error = queryError ? 'Kon geen eiwitten laden. Probeer het later opnieuw.' : null;
 
+  // Derive available stores from actual DB data, preserving SUPERMARKETS ordering
+  const storesInData = new Set(allProteins.map((p) => p.store));
+  const availableStores = SUPERMARKETS.filter((s) => storesInData.has(s.name));
+
   // Filter + sort are derived synchronously from cached data — no extra useEffect needed
   let filteredProteins = [...allProteins];
   if (selectedStores.length > 0) {
@@ -111,6 +115,7 @@ export const useProteinData = () => {
   return {
     allProteins,
     filteredProteins,
+    availableStores,
     loading,
     error,
     selectedStores,

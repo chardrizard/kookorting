@@ -12,6 +12,7 @@ const ProteinSelection = () => {
   
   const {
     filteredProteins,
+    availableStores,
     loading,
     error,
     selectedStores,
@@ -39,6 +40,7 @@ const ProteinSelection = () => {
       </div>
       
       <ProteinFilters
+        availableStores={availableStores}
         selectedStores={selectedStores}
         toggleStore={toggleStore}
         activeSortOption={activeSortOption}

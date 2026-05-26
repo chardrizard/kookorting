@@ -11,7 +11,7 @@ const Header = () => {
   };
   
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 bg-white bg-opacity-80 backdrop-blur-md z-40 border-b border-nature-border">
+    <header className="fixed top-0 left-0 right-0 h-16 bg-nature-background/90 backdrop-blur-md z-40 border-b border-nature-border">
       <div className="container h-full max-w-5xl mx-auto px-4 flex items-center justify-between">
         <div className="flex-1 flex items-center">
           <button 
