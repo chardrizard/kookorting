@@ -110,6 +110,8 @@ const RECIPE_RESPONSE_SCHEMA = {
 const ALLOWED_ORIGINS = [
   'https://kookorting.nl',
   'https://www.kookorting.nl',
+  'http://kookorting.nl',
+  'http://www.kookorting.nl',
   'https://chardrizard.github.io',
   'http://localhost:8080',
   'http://localhost:5173',
