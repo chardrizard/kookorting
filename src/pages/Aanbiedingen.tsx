@@ -5,45 +5,47 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
+const base = import.meta.env.BASE_URL;
+
 const supermarkets = [
   {
     name: 'Albert Heijn',
-    logo: '/supermarkets/albert-heijn.svg',
+    logo: `${base}supermarkets/albert-heijn.svg`,
     folderUrl: 'https://www.ah.nl/bonus',
     description: 'Dat is het van Albert Heijn! Wekelijkse Bonusaanbiedingen met korting tot 50%. Nieuwe acties elke maandag voor al uw dagelijkse boodschappen.',
     offerDays: 'Maandag t/m zondag',
   },
   {
     name: 'Jumbo',
-    logo: '/supermarkets/jumbo.svg',
+    logo: `${base}supermarkets/jumbo.svg`,
     folderUrl: 'https://www.jumbo.com/aanbiedingen/nu',
     description: 'Elke dag de laagste prijs garantie! Scherpe weekaanbiedingen en speciale kortingen op verse producten. Nieuwe folder elke woensdag.',
     offerDays: 'Woensdag t/m dinsdag',
   },
   {
     name: 'Lidl',
-    logo: '/supermarkets/lidl.svg',
+    logo: `${base}supermarkets/lidl.svg`,
     folderUrl: 'https://www.lidl.nl/store',
     description: 'Verrassend veel kwaliteit voor weinig geld. Wekelijkse aanbiedingen op vers, houdbaar en unieke non-food producten. Nieuwe acties elke maandag.',
     offerDays: 'Maandag t/m zondag',
   },
   {
     name: 'Aldi',
-    logo: '/supermarkets/aldi.svg',
+    logo: `${base}supermarkets/aldi.svg`,
     folderUrl: 'https://www.aldi.nl/aanbiedingen.html',
     description: 'Hoge kwaliteit, lage prijs. Voordelige weekaanbiedingen en wisselende non-food acties. Ontdek onze verrassende nieuwe folder elke zondag.',
     offerDays: 'Maandag t/m zondag',
   },
   {
     name: 'Dirk',
-    logo: '/supermarkets/dirk.svg',
+    logo: `${base}supermarkets/dirk.svg`,
     folderUrl: 'https://www.dirk.nl/aanbiedingen',
     description: 'Lage prijzen, prima kwaliteit! Geniet van scherpe weekacties en speciale 1+1 gratis aanbiedingen. Nieuwe aanbiedingen elke week.',
     offerDays: 'Zondag t/m zaterdag',
   },
   {
     name: 'Amazing Oriental',
-    logo: '/supermarkets/amazing-oriental.png',
+    logo: `${base}supermarkets/amazing-oriental.png`,
     folderUrl: 'https://www.orientalwebshop.nl/nl/amazing-deals',
     description: 'Dé Aziatische supermarkt van Nederland. Speciale aanbiedingen op authentieke Aziatische producten en verse specialiteiten. Wisselende seizoenspromoties.',
     offerDays: 'Wisselend per winkel',
